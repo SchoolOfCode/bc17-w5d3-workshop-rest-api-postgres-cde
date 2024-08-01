@@ -40,9 +40,23 @@ export async function createBook(book) {
 }
 
 export async function updateBookById(id, updates) {
+
+  const queryText = "UPDATE books SET  title = $1, published_date = $2, author_id = $3    WHERE id = $4 RETURNING * " ;
+
+  const result = await pool.query(queryText, [updates.title, updates.published_date, updates.author_id, id] );
+
+  
   // Query the database to update a book and return the newly updated book or null
+
+  return result.rows[0];
 }
 
 export async function deleteBookById(id) {
   // Query the database to delete a book and return the deleted book or null
+  const queryText = "DELETE FROM books WHERE id = $1 RETURNING * ";
+
+  const result = await pool.query(queryText, [id]);
+
+  return result.rows[0];
+
 }
